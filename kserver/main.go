@@ -1,6 +1,6 @@
 package main
 
-import "github.com/huahearts/kyubigo/knet"
+import "github.com/huahearts/kyubia"
 
 func main() {
 	s := knet.NewServer()

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 
-	"github.com/huahearts/kyubigo/kiface"
+	"github.com/huahearts/kyubia/kiface"
 )
 
 var defaultHeaderLen uint32 = 8
@@ -27,7 +27,7 @@ func (dp *DataPack) Pack(msg kiface.IMessage) ([]byte, error) {
 		return nil, err
 	}
 
-	if err := binary.Write(buffer, binary.LittleEndian, msg.GetMsgID()); err != nil {
+	if err := binary.Write(buffer, binary.LittleEndian, msg.GetID()); err != nil {
 		return nil, err
 	}
 	if err := binary.Write(buffer, binary.LittleEndian, msg.GetData()); err != nil {

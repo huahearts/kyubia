@@ -8,7 +8,7 @@ import (
 type IConnection interface {
 	Start()
 	Stop()
-	Context() context.Context
+	Context() *context.Context
 	GetTCPCOnnection() *net.TCPConn
 	GetConnID() uint32
 	RemoteAddr() net.Addr

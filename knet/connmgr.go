@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/huahearts/kyubigo/kiface"
+	"github.com/huahearts/kyubia/kiface"
 )
 
 type ConnMgr struct {

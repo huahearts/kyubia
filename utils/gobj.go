@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/huahearts/kyubigo/kiface"
+	"github.com/huahearts/kyubia/kiface"
 )
 
 type GOBJ struct {

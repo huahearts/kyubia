@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/huahearts/kyubigo/kiface"
+	"github.com/huahearts/kyubia/kiface"
 )
 
 type MsgHandler struct {

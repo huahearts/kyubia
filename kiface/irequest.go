@@ -1,5 +1,6 @@
 package kiface
-type IRequest struct {
+
+type IRequest interface {
 	GetConnection() IConnection
 	GetData() []byte
 	GetMsgID() uint32

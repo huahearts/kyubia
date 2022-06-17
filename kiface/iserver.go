@@ -10,5 +10,5 @@ type IServer interface {
 	SetOnConnStop(func(IConnection))
 	OnConnStartCallback(conn IConnection)
 	OnConnStopCallback(conn IConnection)
-	Packet() Packet
+	Packet() IPacket
 }

@@ -1,4 +1,6 @@
-package net
+package knet
+
+import "github.com/huahearts/kyubia/kiface"
 
 type Message struct {
 	DataLen uint32
@@ -6,7 +8,7 @@ type Message struct {
 	Data    []byte
 }
 
-func NewPackage(ID uint32, data []byte) *Message {
+func NewMsgPacket(ID uint32, data []byte) kiface.IMessage {
 	return &Message{
 		DataLen: uint32(len(data)),
 		ID:      ID,
@@ -33,6 +35,6 @@ func (m *Message) SetData(data []byte) {
 	m.Data = data
 }
 
-func (m *Message) SetDataLem(len uint32) {
+func (m *Message) SetDataLen(len uint32) {
 	m.DataLen = len
 }

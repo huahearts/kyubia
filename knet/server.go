@@ -3,10 +3,9 @@ package knet
 import (
 	"fmt"
 	"net"
-	"utils"
 
-	"github.com/huahearts/kyubigo/kiface"
-	"github.com/huahearts/kyubigo/utils"
+	"github.com/huahearts/kyubia/kiface"
+	"github.com/huahearts/kyubia/utils"
 )
 
 var zinxLogo = `                                        
@@ -21,7 +20,7 @@ type Server struct {
 	IPVersion   string
 	IP          string
 	Port        uint32
-	msgHanlder  kiface.IMsgHandler
+	msgHandler  kiface.IMsgHandler
 	ConnMgr     kiface.IConnMgr
 	OnConnStart func(conn kiface.IConnection)
 	OnConnStop  func(conn kiface.IConnection)
@@ -33,15 +32,15 @@ func NewServer(opts ...Option) kiface.IServer {
 		Name:       utils.GlobalObject.Name,
 		IPVersion:  "tcp4",
 		IP:         utils.GlobalObject.Host,
-		Port:       utils.GlobalObject.Port,
-		msgHanlder: NewMsgHandler(),
+		Port:       uint32(utils.GlobalObject.TCPPort),
+		msgHandler: NewMsgHandler(),
 		ConnMgr:    NewConnMgr(),
-		packet, NewDataPacket(),
+		packet:     NewDataPacket(),
 	}
 
-	for opt := range opts {
+	/*for opt := range opts {
 		opt(s)
-	}
+	}*/
 	return s
 }
 
@@ -50,7 +49,7 @@ func (s *Server) Start() {
 
 	go func() {
 		//工作池后续添加
-		m.msgHandler.StartWorkerPool()
+		s.msgHandler.StartWorkerPool()
 
 		addr, err := net.ResolveTCPAddr(s.IPVersion, fmt.Sprintf("%s:%d", s.IP, s.Port))
 		if err != nil {
@@ -77,7 +76,7 @@ func (s *Server) Start() {
 
 			fmt.Println("Get conn remote addr = ", conn.RemoteAddr().String())
 
-			if s.ConnMgr.Len() > utils.GlobalObject.MaxConn {
+			if uint32(s.ConnMgr.Len()) > utils.GlobalObject.MaxConn {
 				//超出最大连接数 应该给客户端返回消息
 				conn.Close()
 				continue
@@ -102,7 +101,7 @@ func (s *Server) Serve() {
 }
 
 func (s *Server) AddRouter(msgId uint32, router kiface.IRouter) {
-	s.msgHanlder.AddRouter(msgId, router)
+	s.msgHandler.AddRouter(msgId, router)
 }
 
 func (s *Server) GetConnMgr() kiface.IConnMgr {

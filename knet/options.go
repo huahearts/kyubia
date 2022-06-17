@@ -1,6 +1,6 @@
 package knet
 
-import "github.com/huahearts/kyubigo/kiface"
+import "github.com/huahearts/kyubia/kiface"
 
 type Option func(s *Server)
 

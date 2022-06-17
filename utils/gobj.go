@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+
+	"github.com/huahearts/kyubigo/kiface"
 )
 
 type GOBJ struct {
@@ -66,14 +68,14 @@ func init() {
 		pwd = "."
 	}
 
-	GlobalObject := &GOBJ{
+	GlobalObject = &GOBJ{
 		Name:             "KyubiServer",
 		Version:          "v1.0.0",
 		TCPPort:          9981,
 		Host:             "0.0.0.0",
 		MaxConn:          12000,
 		MaxPacketSize:    4096,
-		ConfFilePath:     pwd + "/conf/kyubi.json",
+		ConfFilePath:     pwd + "/kserver/conf/kyubi.json",
 		WorkerPoolSize:   10,
 		MaxWorkerTaskLen: 1024,
 		MaxMsgChanLen:    1024,
@@ -82,5 +84,5 @@ func init() {
 		LogDebugClose:    false,
 	}
 
-	GlobalObject.Reload()
+	//GlobalObject.Reload()
 }

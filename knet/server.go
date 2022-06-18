@@ -45,7 +45,7 @@ func NewServer(opts ...Option) kiface.IServer {
 }
 
 func (s *Server) Start() {
-	fmt.Printf("[Server Start] Server Name:%v,IPVersion:%v, IP:%v,Port:%v", s.Name, s.IPVersion, s.IP, s.Port)
+	fmt.Printf("[Server Start] Server Name:%v,IPVersion:%v, IP:%v,Port:%v\n", s.Name, s.IPVersion, s.IP, s.Port)
 
 	go func() {
 		//工作池后续添加

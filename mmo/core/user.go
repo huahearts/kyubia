@@ -1,6 +1,19 @@
+package core
+
+import (
+	"fmt"
+	"math/rand"
+	"sync"
+	//"time"
+
+	"github.com/golang/protobuf/proto"
+	"github.com/huahearts/kyubia/kiface"
+	"github.com/huahearts/kyubia/mmo/pb"
+)
+
 type User struct {
 	Pid  uint32
-	Conn ziface.IConnection
+	Conn kiface.IConnection
 	X    float32
 	Y    float32
 	Z    float32
@@ -39,14 +52,14 @@ func (u *User) SendMsg(msgId uint32, data proto.Message) {
 		return
 	}
 
-	if err := p.Conn.SendMsg(msgId, msg0); err != nil {
-		fmt.Pringln("usr sendmsg err!")
+	if err := p.Conn.SendMsg(msgId, msg); err != nil {
+		fmt.Println("usr sendmsg err!")
 		return
 	}
 	return
 }
 
-func (u *user) SyncPid() {
+func (u *User) SyncPid() {
 	data := &pb.SyncPid{
 		Pid: u.Pid,
 	}
@@ -57,7 +70,7 @@ func (u *user) SyncPid() {
 func (p *User) BroadCastStartPosition() {
 
 	msg := &pb.BroadCast{
-		Pid: p.Pid,
+		PID: p.Pid,
 		Tp:  2, //TP2 代表广播坐标
 		Data: &pb.BroadCast_P{
 			&pb.Position{

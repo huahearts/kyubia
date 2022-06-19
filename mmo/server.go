@@ -14,15 +14,16 @@ func OnConnectionAdd(conn kiface.IConnection) {
 	user.SyncPid()
 	user.BroadCastStartPosition()
 	core.WorldMgrObj.AddUser(user)
-	fmt.Println("=====> Player pidId = ", user.Pid, " arrived ====")
 	conn.SetProperty("pid", user.Pid)
+	user.SyncSurrounding()
+	fmt.Println("=====> Player pidId = ", user.Pid, " arrived ====")
 
 }
 
 func main() {
 	s := knet.NewServer()
 	s.SetOnConnStart(OnConnectionAdd)
-
 	s.AddRouter(2, &api.WorldChatAPI{})
+	s.AddRouter(3, &api.MoveApi{}) //移动
 	s.Serve()
 }

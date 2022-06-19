@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"sync"
+
 	//"time"
 
 	"github.com/golang/protobuf/proto"
@@ -98,4 +99,84 @@ func (u *User) Talk(content string) {
 	for _, user := range users {
 		user.SendMsg(200, msg)
 	}
+}
+
+func (u *User) SyncSurrounding() {
+	pids := WorldMgrObj.AoiMgr.GetPIDsByPos(u.X, u.Z)
+	users := make([]*User, 0, len(pids))
+	for _, pid := range pids {
+		users = append(users, WorldMgrObj.GetPlayerByPid(int32(pid)))
+	}
+
+	msg := &pb.BroadCast{
+		PID: u.Pid,
+		Tp:  2,
+		Data: &pb.BroadCast_P{
+			P: &pb.Position{
+				X: u.X,
+				Y: u.Y,
+				Z: u.Z,
+				V: u.V,
+			},
+		},
+	}
+
+	for _, user := range users {
+		user.SendMsg(200, msg)
+	}
+	playersData := make([]*pb.Player, 0, len(users))
+	for _, player := range users {
+		p := &pb.Player{
+			PID: player.Pid,
+			P: &pb.Position{
+				X: player.X,
+				Y: player.Y,
+				Z: player.Z,
+				V: player.V,
+			},
+		}
+		playersData = append(playersData, p)
+	}
+
+	SyncPlayersMsg := &pb.SyncPlayers{
+		Ps: playersData[:],
+	}
+
+	u.SendMsg(202, SyncPlayersMsg)
+}
+
+func (u *User) UpdatePos(x, y, z, v float32) {
+	u.X = x
+	u.Y = y
+	u.Z = z
+	u.V = v
+	msg := &pb.BroadCast{
+		PID: u.Pid,
+		Tp:  4,
+		Data: &pb.BroadCast_P{
+			P: &pb.Position{
+				X: u.X,
+				Y: u.Y,
+				Z: u.Z,
+				V: u.V,
+			},
+		},
+	}
+
+	users := u.GetSurroundingPlayers()
+	//向周边的每个玩家发送MsgID:200消息，移动位置更新消息
+	for _, user := range users {
+		user.SendMsg(200, msg)
+	}
+}
+
+func (u *User) GetSurroundingPlayers() []*User {
+	pids := WorldMgrObj.AoiMgr.GetPIDsByPos(u.X, u.Z)
+	//将所有pid对应的Player放到Player切片中
+	users := make([]*User, 0, len(pids))
+	for _, pid := range pids {
+		users = append(users, WorldMgrObj.GetPlayerByPid(int32(pid)))
+	}
+
+	return users
 }

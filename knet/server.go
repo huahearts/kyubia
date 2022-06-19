@@ -45,6 +45,7 @@ func NewServer(opts ...Option) kiface.IServer {
 }
 
 func (s *Server) Start() {
+	printLogo()
 	fmt.Printf("[Server Start] Server Name:%v,IPVersion:%v, IP:%v,Port:%v\n", s.Name, s.IPVersion, s.IP, s.Port)
 
 	go func() {
@@ -136,10 +137,9 @@ func (s *Server) display() {
 func printLogo() {
 	fmt.Println(zinxLogo)
 	fmt.Println(topLine)
-	fmt.Println(fmt.Sprintf("%s [Github] https://github.com/aceld                    %s", borderLine, borderLine))
-	fmt.Println(fmt.Sprintf("%s [tutorial] https://www.yuque.com/aceld/npyr8s/bgftov %s", borderLine, borderLine))
+	fmt.Println(fmt.Sprintf("%s [Github] https://github.com/huahearts                    %s", borderLine, borderLine))
 	fmt.Println(bottomLine)
-	fmt.Printf("[Zinx] Version: %s, MaxConn: %d, MaxPacketSize: %d\n",
+	fmt.Printf("[Kyubi] Version: %s, MaxConn: %d, MaxPacketSize: %d\n",
 		utils.GlobalObject.Version,
 		utils.GlobalObject.MaxConn,
 		utils.GlobalObject.MaxPacketSize)

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -31,7 +32,7 @@ var GlobalObject *GOBJ
 
 func PathExist(path string) (bool, error) {
 	_, err := os.Stat(path)
-	if err != nil {
+	if err == nil {
 		return true, nil
 	}
 
@@ -39,7 +40,8 @@ func PathExist(path string) (bool, error) {
 }
 
 func (g *GOBJ) Reload() {
-	if confFileExists, _ := PathExist(g.ConfFilePath); confFileExists == false {
+	if confFileExists, _ := PathExist(g.ConfFilePath); !confFileExists {
+		fmt.Println("[RELOAD failed!!!]", g.ConfFilePath)
 		return
 	}
 
@@ -53,6 +55,7 @@ func (g *GOBJ) Reload() {
 		panic(err)
 	}
 
+	fmt.Println("[RELOAD SUCC!!!]")
 	if g.LogFile != "" {
 		//klog.SetLogFile(g.LogDir,g.LogFile)
 	}
@@ -75,7 +78,7 @@ func init() {
 		Host:             "0.0.0.0",
 		MaxConn:          12000,
 		MaxPacketSize:    4096,
-		ConfFilePath:     pwd + "/kserver/conf/kyubi.json",
+		ConfFilePath:     pwd + "/conf/kyubi.json",
 		WorkerPoolSize:   10,
 		MaxWorkerTaskLen: 1024,
 		MaxMsgChanLen:    1024,
@@ -84,5 +87,5 @@ func init() {
 		LogDebugClose:    false,
 	}
 
-	//GlobalObject.Reload()
+	GlobalObject.Reload()
 }

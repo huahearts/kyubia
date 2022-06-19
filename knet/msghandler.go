@@ -33,7 +33,7 @@ func (mh *MsgHandler) DoMsgHandler(req kiface.IRequest) {
 		fmt.Println("api msgID = ", req.GetMsgID(), "is unexist")
 		return
 	}
-
+	fmt.Println("api msgID = ", req.GetMsgID(), "is running")
 	handle.PreCallback(req)
 	handle.Callback(req)
 	handle.PostCallback(req)

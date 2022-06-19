@@ -20,11 +20,10 @@ func NewConnMgr() *ConnMgr {
 }
 
 func (cm *ConnMgr) Add(conn kiface.IConnection) {
-	{
-		cm.connMtx.Lock()
-		defer cm.connMtx.Unlock()
-		cm.conns[conn.GetConnID()] = conn
-	}
+	fmt.Println("connection add to connmgr begin", cm.Len())
+	cm.connMtx.Lock()
+	cm.conns[conn.GetConnID()] = conn
+	cm.connMtx.Unlock()
 	fmt.Println("connection add to connmgr succ,conn num:", cm.Len())
 }
 

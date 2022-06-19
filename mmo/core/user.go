@@ -12,7 +12,7 @@ import (
 )
 
 type User struct {
-	Pid  uint32
+	Pid  int32
 	Conn kiface.IConnection
 	X    float32
 	Y    float32
@@ -20,10 +20,10 @@ type User struct {
 	V    float32
 }
 
-var PidGen uint32 = 1
+var PidGen int32 = 1
 var IdLock sync.Mutex
 
-func NewUser(conn ziface.IConnection) *User {
+func NewUser(conn kiface.IConnection) *User {
 	IdLock.Lock()
 	id := PidGen
 	PidGen++
@@ -52,7 +52,7 @@ func (u *User) SendMsg(msgId uint32, data proto.Message) {
 		return
 	}
 
-	if err := p.Conn.SendMsg(msgId, msg); err != nil {
+	if err := u.Conn.SendMsg(msgId, msg); err != nil {
 		fmt.Println("usr sendmsg err!")
 		return
 	}
@@ -67,20 +67,35 @@ func (u *User) SyncPid() {
 	u.SendMsg(1, data)
 }
 
-func (p *User) BroadCastStartPosition() {
+func (u *User) BroadCastStartPosition() {
 
 	msg := &pb.BroadCast{
-		PID: p.Pid,
+		PID: u.Pid,
 		Tp:  2, //TP2 代表广播坐标
 		Data: &pb.BroadCast_P{
 			&pb.Position{
-				X: p.X,
-				Y: p.Y,
-				Z: p.Z,
-				V: p.V,
+				X: u.X,
+				Y: u.Y,
+				Z: u.Z,
+				V: u.V,
 			},
 		},
 	}
 
-	p.SendMsg(200, msg)
+	u.SendMsg(200, msg)
+}
+
+func (u *User) Talk(content string) {
+	msg := &pb.BroadCast{
+		PID: u.Pid,
+		Tp:  1,
+		Data: &pb.BroadCast_Content{
+			Content: content,
+		},
+	}
+
+	users := WorldMgrObj.GetAllPlayers()
+	for _, user := range users {
+		user.SendMsg(200, msg)
+	}
 }

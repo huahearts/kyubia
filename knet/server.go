@@ -75,10 +75,11 @@ func (s *Server) Start() {
 				continue
 			}
 
-			fmt.Println("Get conn remote addr = ", conn.RemoteAddr().String())
+			fmt.Printf("Get conn remote addr = %v,%v\n ", conn.RemoteAddr().String(), utils.GlobalObject.MaxConn)
 
 			if uint32(s.ConnMgr.Len()) > utils.GlobalObject.MaxConn {
 				//超出最大连接数 应该给客户端返回消息
+				fmt.Println("range to max conn")
 				conn.Close()
 				continue
 			}
@@ -116,15 +117,15 @@ func (s *Server) SetOnConnStop(onStopCallback func(kiface.IConnection)) {
 	s.OnConnStop = onStopCallback
 }
 func (s *Server) OnConnStartCallback(conn kiface.IConnection) {
-	if s.OnConnStartCallback != nil {
+	if s.OnConnStart != nil {
 		fmt.Println("--->callonStart callback")
-		s.OnConnStartCallback(conn)
+		s.OnConnStart(conn)
 	}
 }
 func (s *Server) OnConnStopCallback(conn kiface.IConnection) {
-	if s.OnConnStopCallback != nil {
+	if s.OnConnStop != nil {
 		fmt.Println("--->callonStop callback")
-		s.OnConnStartCallback(conn)
+		s.OnConnStop(conn)
 	}
 }
 func (s *Server) Packet() kiface.IPacket {

@@ -40,7 +40,7 @@ func NewConnection(server kiface.IServer, conn *net.TCPConn, connId uint32, msgH
 		msgBuffChan: make(chan []byte, utils.GlobalObject.MaxMsgChanLen),
 		property:    nil,
 	}
-
+	fmt.Println("[create New Connection]")
 	c.TCPServer.GetConnMgr().Add(c)
 	return c
 }

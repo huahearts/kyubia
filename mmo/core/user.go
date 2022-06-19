@@ -180,3 +180,17 @@ func (u *User) GetSurroundingPlayers() []*User {
 
 	return users
 }
+
+func (u *User) LostConnection() {
+	users := u.GetSurroundingPlayers()
+	msg := &pb.SyncPid{
+		Pid: u.Pid,
+	}
+	fmt.Println("user offline")
+	for _, user := range users {
+		user.SendMsg(201, msg)
+	}
+	WorldMgrObj.AoiMgr.RemoveFromGridByPos(int(u.Pid), u.X, u.Z)
+	WorldMgrObj.RemovePlayerByPid(u.Pid)
+
+}
